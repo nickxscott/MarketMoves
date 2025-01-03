@@ -1,0 +1,77 @@
+
+
+#login.auth-container {
+  background-color: #fff;
+  display:block;
+  border-color: #ddd #ddd #d8d8d8;
+  box-shadow: 0 2px 0 rgba(175, 175, 175, 0.12);
+  font-family: montserrat,Arial,Helvetica,sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: #5c6971;
+  position: relative;
+  overflow: auto;
+  border-radius: 3px;
+  border-style: solid;
+  border-width: 1px;
+  height: auto;
+  margin: 50px auto 8px;
+  width: 400px;
+  min-width: 300px;
+}
+
+
+#eid, #pwd {
+  position: relative;
+  background-color: #fff;
+  border-color: #bbb;
+  height: 40px;
+  border: 1px solid #bbb;
+  display: inline-block;
+  border-radius: 3px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+#login .auth-content {   /*main container spacing*/
+  padding: 12px 42px 25px;
+  text-align: center;
+}
+
+#login .bottom {  /*spacing to button*/
+  padding: 0 0 15px;
+}
+
+#login-button {
+  margin: auto;
+  text-align: center;
+  border-radius: 10px;
+  width: 75%;
+  /*font-size: 1vw;
+  height: 5vh;*/
+}
+
+#login.auth-container .auth-img { /*button*/
+ display:block;
+ width:50%;
+ margin-left: auto;
+ margin-right:auto;
+}
+
+#login.auth-container .button-primary { /*button*/
+  display: block;
+  width: 100%;
+  height: 50px;
+  color: #fff;
+  background: linear-gradient(#1662dd, #155ccf);
+  border-color: #0f4397;
+  border-bottom-color: #0e3f8e;
+  box-shadow: rgba(0, 0, 0, 0.15) 0 1px 0, rgba(255, 255, 255, 0.1) 0 1px 0 0 inset;
+}
+
+
+
+ .modebar {
+display: none !important;
+}

@@ -1,0 +1,30 @@
+#test data and images
+/notebooks/*.csv
+/notebooks/*.jpg
+
+#flask session
+flask_session/
+
+#environment vars
+*.env
+
+#text files
+*.txt
+
+#csv files
+*.csv
+
+#venv
+venv/
+
+#notes
+notes.txt
+
+#secrets
+secrets/
+
+#notebooks
+notebooks/
+
+#okta config files
+*.json
