@@ -5,30 +5,34 @@
 
 <div class="container-fluid">
     <div class="row justify-content-center">
-        <div class='col-12 col-md-10 col-lg-10 col-xl-8 text-center' >
-            <div class='card border border-2 border-grey mt-2'>
-            	<h1 >Market Moves</h1>
+        <div class='col-12 col-md-10 col-lg-10 col-xl-8 text-center pt-2' >
+            <h1 >Market Moves</h1>
+            <div class='card border border-2 border-grey mt-2'>            	
 				<div class='card-body'>
-					<p>Enter a ticker to see distribution of returns from the previous 5 years. Enter a return or leave blank to see latest return.</p>
+					<p class='lead'>Enter a ticker to see distribution of returns from the previous 5 years. Enter a return or leave blank to see latest return.</p>
                     <form method='POST' class='mt-1 form-floating'>
                         {{ form.csrf_token }}
                         <div class='row justify-content-center'>
-                            <div class='col-6 col-md-5 col-lg-4 col-xl-4 text-center'>
-                                <div class="form-outline input-group input-group-lg">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text" id="inputGroup-sizing-lg">Ticker</span>
+                            <div class='col-10 col-md-8  text-center'>
+                                <div class="form-group row my-2">
+                                    <label class="col-lg-2 col-form-label">Ticker</label>
+                                    <div class="col-lg-10">
+                                      {{ form.ticker(class="form-control form-control-lg text-center",placeholder="Enter ticker symbol") }}
                                     </div>
-                                    {{ form.ticker(class="form-control form-control-lg text-center") }}
                                 </div>
-                                <div class="form-outline ">
-                                    {{ form.return_(class="form-control form-control-lg text-center",placeholder="Leave blank for latest return") }}
-                                    <label class="form-label" for="typeEmailX-2">return</label>
+                                <div class="form-group row my-2">
+                                    <label class="col-lg-2 col-form-label">Return</label>
+                                    <div class="col-lg-10">
+                                      {{ form.return_(class="form-control form-control-lg text-center",placeholder="Leave blank for latest return") }}
+                                    </div>
                                 </div>
-                                <div class="form-outline ">
-                                    {{ form.tail(class="form-control form-control-lg text-center") }}
-                                    <label class="form-label" for="typeEmailX-2">tail</label>
+                                <div class="form-group row my-2">
+                                    <label class="col-lg-2 col-form-label">Tail</label>
+                                    <div class="col-lg-10">
+                                      {{ form.tail(class="form-control form-control-lg text-center") }}
+                                    </div>
                                 </div>
-                                <div class="form-outline">
+                                <div class="form-outline mt-1">
                                     <button class="btn btn-primary" type="submit">Submit</button>
                                 </div>
                             </div>
@@ -37,28 +41,37 @@
                 </div>
             </div>
         </div>
-        <div class='col-12 col-md-10 col-lg-10 col-xl-8 text-center' >
-            <div class='card border border-2 border-black mt-2' style="background-color:rgba(255, 255, 255, 0.85);">
-                <div class='card-body'>
-                    {% if not err %}
-                        <h1>{{ticker['longName']}}</h1>
-                        {% if not custom_return %}
-                            <p>Return ({{latest_date}}): {{ return_ }}%</p>
+        <div class='col-12 col-md-10 col-lg-10 col-xl-8 text-center mb-2' >
+            <div class="card d-block border border-2 border-grey mt-2 container-fluid"  style='overflow-x: auto;'>
+                <div class="row m-auto" style='min-width: 600px;'>
+
+
+                    <div class='card-body'>
+                        {% if not err %}
+                        <div class='card-header'>
+                            <h2>{{ticker['longName']}}</h2>
+                        </div>
+                            {% if not custom_return %}
+                                <p class='lead' >Return ({{latest_date}}): <b>{{ return_ }}%</b></p>
+                            {% else %}
+                                <p class='lead' >Return: <b>{{ return_ }}%</b></p>
+                            {% endif %}
+                            <p class='lead' >{{ text | safe }}</p>
                         {% else %}
-                            <p>Return: {{ return_ }}%</p>
+                            <p class='lead'>this ticker was not found</p>
                         {% endif %}
-                        <p>{{ text }}</p>
-                    {% else %}
-                        <p>this ticker was not found</p>
-                    {% endif %}
-                    <div id='market-plot' >
-                        <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
-                        <script type='text/javascript'>
-                          var graph1 = {{ plot | safe }};
-                          var config = {responsive: true};
-                          Plotly.plot('market-plot',graph1,{displayModeBar: false});
-                        </script>
+                        <h3>Return Distribution</h3>
+                        <div id='market-plot' >
+                            <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+                            <script type='text/javascript'>
+                              var graph1 = {{ plot | safe }};
+                              var config = {responsive: true};
+                              Plotly.plot('market-plot',graph1,{displayModeBar: false});
+                            </script>
+                        </div>
                     </div>
+
+
                 </div>
             </div>
         </div>

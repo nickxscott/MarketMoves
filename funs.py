@@ -38,7 +38,6 @@ def plot_return(ticker, tail=None, return_=None):
         #convert percent to decimal before plugging into formula
         ret=ret/100
     
-    print('return: ',round(ret*100,2),'%')
     #calculate z score and cumulative distribution
     x=ret
     u=df_returns.change.mean()
@@ -48,7 +47,7 @@ def plot_return(ticker, tail=None, return_=None):
     left_tail=round((1-stats.norm.sf(z))*100,2)
 
     #set tail default
-    if not tail:
+    if tail=='auto':
         if x > 0:
             tail='right'
         else:
@@ -59,18 +58,19 @@ def plot_return(ticker, tail=None, return_=None):
         x1 = [xc for xc in fig.data[0].x if xc >= ret]
         y1 = fig.data[0].y[-len(x1):]
         #print('probability that return would be equal or higher: ', right_tail,'%')
-        text='probability that return would be equal or higher: '+str(right_tail)+'%'
+        text='Probability that return would be equal or higher (based on previous 5 years): <b>'+str(right_tail)+'%</b>'
     else:
         x1 = [xc for xc in fig.data[0].x if xc <= ret]
         y1 = fig.data[0].y[:len(x1)]
         #print('probability that return would be equal or lower: ', left_tail,'%')
-        text='probability that return would be equal or lower: '+str(left_tail)+'%'
+        text='Probability that return would be equal or lower (based on previous 5 years): <b>'+str(left_tail)+'%</b>'
     fig.add_scatter(x=x1, y=y1,fill='tozeroy', mode='none' , fillcolor='rgba(158, 156, 157, 0.5)')
 
     # format plot
-    fig.update_traces(  showlegend=False, line=dict(color='red',  width=3))
-    fig.update_layout(  {'plot_bgcolor':'black', 
-                       'paper_bgcolor':'grey'},
+    fig.update_traces(  showlegend=False, line=dict(color='#0456d9',  width=4))
+    fig.update_layout(  {'plot_bgcolor':'rgba(0, 0, 0, 0)', 
+                       'paper_bgcolor':'rgba(0, 0, 0, 0)'},
+                       font = {'color': "#a8a8a8", 'family': "Arial"},
                        hovermode=False,
                         dragmode=False,
                         xaxis_title='Return (decimal)')

@@ -22,6 +22,7 @@ def home():
 	if request.method=='GET':
 		symbol='SPY'
 		form.ticker.data=symbol
+		form.tail.data='auto'
 	else:
 		symbol=form.ticker.data.replace(" ", "").upper()
 
@@ -36,8 +37,6 @@ def home():
 		latest_date=False
 	else:
 		plot, text, return_, latest_date, custom_return=plot_return(ticker=symbol, tail=form.tail.data, return_=form.return_.data)
-
-	print(form.return_.data)
 
 	return render_template("home.html", form=form, 
 										ticker=ticker, 
