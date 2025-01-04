@@ -10,21 +10,13 @@ from datetime import date, timedelta
 #app-specific imports
 import yfinance as yf
 import plotly
+import plotly.express as px
 import plotly.figure_factory as ff
 
-def plot_return(ticker, tail=None, return_=None):
+def plot_return(df, tail=None, return_=None):
     #get daily data for past 5 years and calculate change
-    df_returns = yf.download(ticker, start=date.today()-timedelta(days=365*5), end=date.today())
+    df_returns = df
     custom_return=False
-
-    prev=[]
-    change=[np.NaN]
-    for index, row in df_returns.iterrows():
-        prev.append(row['Close'][ticker])
-        if len(prev)>1:
-            chg=(row['Close'][ticker]-prev[-2])/prev[-2]
-            change.append(chg)
-    df_returns['change']=change
         
     #create plot
     fig = ff.create_distplot([df_returns.change.tolist()[1:]], group_labels=['returns'],show_hist=False,show_rug=False)
@@ -58,19 +50,19 @@ def plot_return(ticker, tail=None, return_=None):
         x1 = [xc for xc in fig.data[0].x if xc >= ret]
         y1 = fig.data[0].y[-len(x1):]
         #print('probability that return would be equal or higher: ', right_tail,'%')
-        text='Probability that return would be equal or higher (based on previous 5 years): <b>'+str(right_tail)+'%</b>'
+        text='Probability that return would be equal or higher (based on previous 5 years): '+str(right_tail)+'%'
     else:
         x1 = [xc for xc in fig.data[0].x if xc <= ret]
         y1 = fig.data[0].y[:len(x1)]
         #print('probability that return would be equal or lower: ', left_tail,'%')
-        text='Probability that return would be equal or lower (based on previous 5 years): <b>'+str(left_tail)+'%</b>'
+        text='Probability that return would be equal or lower (based on previous 5 years): '+str(left_tail)+'%'
     fig.add_scatter(x=x1, y=y1,fill='tozeroy', mode='none' , fillcolor='rgba(158, 156, 157, 0.5)')
 
     # format plot
     fig.update_traces(  showlegend=False, line=dict(color='#0456d9',  width=4))
     fig.update_layout(  {'plot_bgcolor':'rgba(0, 0, 0, 0)', 
                        'paper_bgcolor':'rgba(0, 0, 0, 0)'},
-                       font = {'color': "#a8a8a8", 'family': "Arial"},
+                       font = {'color': "#a8a8a8", 'family': "Monospace"},
                        hovermode=False,
                         dragmode=False,
                         xaxis_title='Return (decimal)')
@@ -83,3 +75,27 @@ def plot_return(ticker, tail=None, return_=None):
     latest_date_display=str(latest_date.day)+'/'+str(latest_date.month)+'/'+str(latest_date.year)
 
     return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder), text, return_display, latest_date, custom_return
+
+def plot_price(df):
+    #remove multi index columns and rows
+    df.columns=df.columns.droplevel('Ticker')
+    df=df.reset_index()
+    #get daily data for past 5 years and calculate change
+    df.change=round(df.change*100,2)
+    fig = px.line(df, x="Date", y="Close", custom_data=['change'],hover_data={"Date":True, "Close":True, 'change':True})
+
+    #custom hover data
+    fig.update_traces(  hovertemplate='Date: %{x} <br>Closing Price: %{y:$.2f}<br>Change: %{customdata[0]}%<extra></extra>',
+                        hoverlabel = dict(
+                                            bgcolor='#ffffff'
+                                        ),
+                        marker_line=dict(width=2, color='#a8a8a8'),
+                        line=dict(color='#0456d9')
+                     )
+    fig.update_layout(  {'plot_bgcolor':'rgba(0, 0, 0, 0)', 
+                       'paper_bgcolor':'rgba(0, 0, 0, 0)'},
+                       font = {'color': "#a8a8a8", 'family': "Monospace"},
+                       yaxis_title='')
+    fig.update_yaxes(showticklabels=False)
+
+    return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)

@@ -18,6 +18,7 @@ app.secret_key = sk
 def home():
 	form=tickerForm()
 	err=False
+	custom_return=False
 	today=date.today()
 	if request.method=='GET':
 		symbol='SPY'
@@ -36,7 +37,20 @@ def home():
 		return_=False
 		latest_date=False
 	else:
-		plot, text, return_, latest_date, custom_return=plot_return(ticker=symbol, tail=form.tail.data, return_=form.return_.data)
+		#get daily data for past 5 years and calculate change
+		df_returns = yf.download(symbol, start=date.today()-timedelta(days=365*5), end=date.today())
+		prev=[]
+		change=[np.NaN]
+		for index, row in df_returns.iterrows():
+			prev.append(row['Close'][symbol])
+			if len(prev)>1:
+				chg=(row['Close'][symbol]-prev[-2])/prev[-2]
+				change.append(chg)
+		df_returns['change']=change
+		
+		plot, text, return_, latest_date, custom_return=plot_return(df=df_returns, tail=form.tail.data, return_=form.return_.data)
+
+		price_plot=plot_price(df_returns)
 
 	return render_template("home.html", form=form, 
 										ticker=ticker, 
@@ -45,7 +59,8 @@ def home():
 										text=text, 
 										return_=return_,
 										custom_return=custom_return,
-										latest_date=latest_date
+										latest_date=latest_date,
+										price_plot=price_plot
 										)
 
 @app.errorhandler(404)
