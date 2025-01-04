@@ -9,7 +9,6 @@ MarkupSafe
 numpy
 pandas
 plotly
-random
 scipy
 string
 Werkzeug==2.0.2
