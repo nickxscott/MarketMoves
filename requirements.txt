@@ -10,7 +10,6 @@ numpy
 pandas
 plotly
 plotly.express
-plotly.figure_factory
 random
 scipy
 string
