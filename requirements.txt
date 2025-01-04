@@ -9,7 +9,6 @@ MarkupSafe
 numpy
 pandas
 plotly
-plotly.express
 random
 scipy
 string
