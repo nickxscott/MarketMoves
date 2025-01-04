@@ -10,7 +10,6 @@ numpy
 pandas
 plotly
 scipy
-string
 Werkzeug==2.0.2
 wincertstore
 wtforms
