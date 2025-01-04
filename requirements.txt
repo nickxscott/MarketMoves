@@ -8,7 +8,7 @@ Jinja2
 MarkupSafe
 numpy
 pandas
-plotly
+plotly==5.9.0
 random
 scipy
 string
