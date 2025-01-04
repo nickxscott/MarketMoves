@@ -6,7 +6,7 @@ gunicorn
 itsdangerous
 Jinja2
 MarkupSafe
-numpy
+numpy==1.23.3
 pandas
 plotly
 scipy
