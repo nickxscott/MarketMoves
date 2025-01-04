@@ -33,6 +33,7 @@ def home():
 	if len(ticker)==1:
 		err=True
 		plot=False
+		price_plot=False
 		text=False
 		return_=False
 		latest_date=False

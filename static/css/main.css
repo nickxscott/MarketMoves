@@ -12,8 +12,7 @@ display: none !important;
 
 
 div::-webkit-scrollbar {
-  width: 5px !important;
-  -webkit-overflow-scrolling: auto;
+  width: 10px !important;
 }
 
 div::-webkit-scrollbar-thumb {
