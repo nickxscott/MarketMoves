@@ -8,8 +8,6 @@ flask_session/
 #environment vars
 *.env
 
-#text files
-*.txt
 
 #csv files
 *.csv
