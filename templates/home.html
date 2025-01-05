@@ -9,7 +9,7 @@
             <h1 >Market Moves</h1>
             <div class='card border border-2 border-grey mt-2'>            	
 				<div class='card-body'>
-					<p class='lead'>Enter a ticker to see distribution of returns from the previous 5 years. Enter a return or leave blank to see latest return.</p>
+					<p class='lead'>Enter a ticker and a desired return to see the associated probability*. Leave the return field blank to see latest return.</p>
                     <form method='POST' class='mt-1 form-floating'>
                         {{ form.csrf_token }}
                         <div class='row justify-content-center'>
@@ -32,9 +32,10 @@
                                       {{ form.tail(class="form-control form-control-lg text-center") }}
                                     </div>
                                 </div>
-                                <div class="form-outline mt-1">
+                                <div class="form-outline my-2">
                                     <button class="btn btn-primary" type="submit" style='background-color: #0456d9; border-color: #a8a8a8;'>Submit</button>
                                 </div>
+                                <p class='small mt-3 mb-0 pb-0'>*Based on the previous 5 years of trading.</p>
                             </div>
                         </div>
                     </form>

@@ -50,12 +50,12 @@ def plot_return(df, tail=None, return_=None):
         x1 = [xc for xc in fig.data[0].x if xc >= ret]
         y1 = fig.data[0].y[-len(x1):]
         #print('probability that return would be equal or higher: ', right_tail,'%')
-        text='Probability that return would be equal or higher (based on previous 5 years): '+str(right_tail)+'%'
+        text='Probability that a daily return would be equal or higher (based on previous 5 years): '+str(right_tail)+'%'
     else:
         x1 = [xc for xc in fig.data[0].x if xc <= ret]
         y1 = fig.data[0].y[:len(x1)]
         #print('probability that return would be equal or lower: ', left_tail,'%')
-        text='Probability that return would be equal or lower (based on previous 5 years): '+str(left_tail)+'%'
+        text='Probability that a daily return would be equal or lower (based on previous 5 years): '+str(left_tail)+'%'
     fig.add_scatter(x=x1, y=y1,fill='tozeroy', mode='none' , fillcolor='rgba(158, 156, 157, 0.5)')
 
     # format plot
