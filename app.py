@@ -46,7 +46,7 @@ def home():
 			prev.append(row['Close'][symbol])
 			if len(prev)>1:
 				chg=(row['Close'][symbol]-prev[-2])/prev[-2]
-				change.append(chg)
+				change.append(chg*100)
 		df_returns['change']=change
 		
 		plot, text, return_, latest_date, custom_return=plot_return(df=df_returns, tail=form.tail.data, return_=form.return_.data)

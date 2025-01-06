@@ -28,7 +28,7 @@ def plot_return(df, tail=None, return_=None):
         custom_return=True
         ret=float(return_)
         #convert percent to decimal before plugging into formula
-        ret=ret/100
+        #ret=ret/100
     
     #calculate z score and cumulative distribution
     x=ret
@@ -50,12 +50,12 @@ def plot_return(df, tail=None, return_=None):
         x1 = [xc for xc in fig.data[0].x if xc >= ret]
         y1 = fig.data[0].y[-len(x1):]
         #print('probability that return would be equal or higher: ', right_tail,'%')
-        text='Probability that a daily return would be equal or higher (based on previous 5 years): '+str(right_tail)+'%'
+        text='Probability that a daily return would be equal or higher: '+str(right_tail)+'%'
     else:
         x1 = [xc for xc in fig.data[0].x if xc <= ret]
         y1 = fig.data[0].y[:len(x1)]
         #print('probability that return would be equal or lower: ', left_tail,'%')
-        text='Probability that a daily return would be equal or lower (based on previous 5 years): '+str(left_tail)+'%'
+        text='Probability that a daily return would be equal or lower: '+str(left_tail)+'%'
     fig.add_scatter(x=x1, y=y1,fill='tozeroy', mode='none' , fillcolor='rgba(158, 156, 157, 0.5)')
 
     # format plot
@@ -65,10 +65,10 @@ def plot_return(df, tail=None, return_=None):
                        font = {'color': "#a8a8a8", 'family': "Monospace"},
                        hovermode=False,
                         dragmode=False,
-                        xaxis_title='Return (decimal)')
+                        xaxis_title='Return (%)')
     fig.update_yaxes(showticklabels=False)
 
-    return_display=round(x*100,2)
+    return_display=round(x,2)
 
     #get most recent date in df
     latest_date=df_returns.index.max().date()
@@ -81,7 +81,7 @@ def plot_price(df):
     df.columns=df.columns.droplevel('Ticker')
     df=df.reset_index()
     #get daily data for past 5 years and calculate change
-    df.change=round(df.change*100,2)
+    df.change=round(df.change,2)
     fig = px.line(df, x="Date", y="Close", custom_data=['change'],hover_data={"Date":True, "Close":True, 'change':True})
 
     #custom hover data
