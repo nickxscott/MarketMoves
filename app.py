@@ -20,17 +20,18 @@ def home():
 	err=False
 	custom_return=False
 	today=date.today()
-	if request.method=='GET':
+	if request.method!='POST':
 		symbol='SPY'
 		form.ticker.data=symbol
 		form.tail.data='auto'
 	else:
 		symbol=form.ticker.data.replace(" ", "").upper()
+		symbol=symbol.replace(".", "-")
 
 	#get ticker data
 	ticker=yf.Ticker(symbol).info
 
-	if len(ticker)==1:
+	if len(ticker)<8:
 		err=True
 		plot=False
 		price_plot=False
