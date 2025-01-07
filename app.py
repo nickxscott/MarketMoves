@@ -28,19 +28,21 @@ def home():
 		symbol=form.ticker.data.replace(" ", "").upper()
 		symbol=symbol.replace(".", "-")
 
-	#get ticker data
-	ticker=yf.Ticker(symbol).info
+	#get daily data for past 5 years and calculate change
+	df_returns = yf.download(symbol, start=date.today()-timedelta(days=365*5), end=date.today())
+	
 
-	if len(ticker)<8:
+	if len(df_returns)<1:
 		err=True
 		plot=False
 		price_plot=False
 		text=False
 		return_=False
 		latest_date=False
+		ticker=False
 	else:
-		#get daily data for past 5 years and calculate change
-		df_returns = yf.download(symbol, start=date.today()-timedelta(days=365*5), end=date.today())
+		#get ticker data
+		ticker=yf.Ticker(symbol).info
 		prev=[]
 		change=[np.NaN]
 		for index, row in df_returns.iterrows():
