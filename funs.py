@@ -95,7 +95,6 @@ def plot_price(df):
     fig.update_layout(  {'plot_bgcolor':'rgba(0, 0, 0, 0)', 
                        'paper_bgcolor':'rgba(0, 0, 0, 0)'},
                        font = {'color': "#a8a8a8", 'family': "Monospace"},
-                       yaxis_title='')
-    fig.update_yaxes(showticklabels=False)
+                       yaxis_title='Share Price ($)')
 
     return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
