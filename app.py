@@ -2,9 +2,14 @@
 from flask import Flask,render_template,request,url_for,flash,jsonify,session,redirect, Markup, send_file
 from flask_session import Session
 
+#scheduling imports
+from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.triggers.cron import CronTrigger
+
 #custom imports
 from funs import *
 from forms import *
+from get import get_request
 
 #python imports
 from datetime import date
@@ -12,6 +17,14 @@ from datetime import date
 app = Flask(__name__, static_url_path='/static')
 sk = ''.join(random.choices(string.ascii_uppercase +string.ascii_lowercase+string.digits, k=60))
 app.secret_key = sk
+
+#create schedule for get requests
+scheduler = BackgroundScheduler()
+trigger = CronTrigger(
+        year="*", month="*", day="*", hour="*", minute="*/10", second="0"
+    )
+scheduler.add_job(get_request, trigger=trigger)
+scheduler.start()
 
 
 @app.route('/',methods=['GET','POST']) 
