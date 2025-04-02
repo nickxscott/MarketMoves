@@ -19,12 +19,12 @@ sk = ''.join(random.choices(string.ascii_uppercase +string.ascii_lowercase+strin
 app.secret_key = sk
 
 #create schedule for get requests
-#scheduler = BackgroundScheduler()
-#trigger = CronTrigger(
-#        year="*", month="*", day="*", hour="*", minute="*/10", second="0"
-#    )
-#scheduler.add_job(get_request, trigger=trigger)
-#scheduler.start()
+scheduler = BackgroundScheduler()
+trigger = CronTrigger(
+        year="*", month="*", day="*", hour="*", minute="*/10", second="0"
+    )
+scheduler.add_job(get_request, trigger=trigger)
+scheduler.start()
 
 
 @app.route('/',methods=['GET','POST']) 
