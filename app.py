@@ -42,6 +42,7 @@ def home():
 		symbol=symbol.replace(".", "-")
 
 	#get daily data for past 5 years and calculate change
+	print('symbol: ', symbol)
 	df_returns = yf.download(symbol, start=date.today()-timedelta(days=365*5), end=date.today())
 	
 
