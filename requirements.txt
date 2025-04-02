@@ -9,12 +9,12 @@ Jinja2
 MarkupSafe
 numpy==1.23.3
 pandas
-plotly
+plotly==5.9.0
 scipy
 Werkzeug==2.0.2
 wincertstore
 wtforms
-yfinance
+yfinance==0.2.54
 
 
 
