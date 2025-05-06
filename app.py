@@ -10,6 +10,7 @@ from apscheduler.triggers.cron import CronTrigger
 from funs import *
 from forms import *
 from get import get_request
+from curl_cffi import requests
 
 #python imports
 from datetime import date
@@ -33,6 +34,7 @@ def home():
 	err=False
 	custom_return=False
 	today=date.today()
+	session = requests.Session(impersonate="chrome")
 	if request.method!='POST':
 		symbol='SPY'
 		form.ticker.data=symbol
@@ -43,7 +45,7 @@ def home():
 
 	#get daily data for past 5 years and calculate change
 	print('symbol: ', symbol)
-	df_returns = yf.download(symbol, start=date.today()-timedelta(days=365*5), end=date.today())
+	df_returns = yf.download(symbol, start=date.today()-timedelta(days=365*5), end=date.today(), session=session)
 	
 
 	if len(df_returns)<1:
@@ -56,7 +58,7 @@ def home():
 		ticker=False
 	else:
 		#get ticker data
-		ticker=yf.Ticker(symbol).info
+		ticker=yf.Ticker(symbol,session=session).info
 		prev=[]
 		change=[np.NaN]
 		for index, row in df_returns.iterrows():

@@ -1,5 +1,5 @@
-import requests
+import requests as reqs
 
 def get_request():
-	x = requests.get('https://marketmoves.onrender.com')
+	x = reqs.get('https://marketmoves.onrender.com')
 	print(x.status_code)
