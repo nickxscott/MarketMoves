@@ -11,7 +11,7 @@ MarkupSafe
 numpy==1.23.3
 pandas
 plotly==5.9.0
-scipy
+scipy>=1.6.3
 Werkzeug==2.0.2
 wincertstore
 wtforms
