@@ -45,7 +45,10 @@ def home():
 
 	#get daily data for past 5 years and calculate change
 	print('symbol: ', symbol)
-	df_returns = yf.download(symbol, start=date.today()-timedelta(days=365*5), end=date.today(), session=session)
+	df_returns = yf.download(	symbol, 
+								#start=date.today()-timedelta(days=365*5), end=date.today(), 
+								period='5y',
+								session=session)
 	
 
 	if len(df_returns)<1:
