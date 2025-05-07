@@ -15,7 +15,7 @@ scipy>=1.6.3
 Werkzeug==2.0.2
 wincertstore
 wtforms
-yfinance==0.2.54
+yfinance==0.2.58
 
 
 
