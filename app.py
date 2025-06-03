@@ -33,7 +33,7 @@ def home():
 	err=False
 	custom_return=False
 	today=date.today()
-	session = requests.Session(impersonate="safari")
+	session = requests.Session(impersonate="chrome")
 	if request.method!='POST':
 		symbol='SPY'
 		form.ticker.data=symbol

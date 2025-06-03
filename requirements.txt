@@ -12,7 +12,7 @@ plotly==5.9.0
 scipy==1.10.1
 Werkzeug==2.0.2
 wtforms==3.1.0
-yfinance==0.2.58
+yfinance==0.2.61
 
 
 
