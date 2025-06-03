@@ -73,9 +73,7 @@ def home():
 		ticker=False
 	else:
 		#get ticker data
-		ticker=yf.Ticker(symbol
-						#session=session
-						).info
+		ticker=yf.Ticker(symbol).info['longName']
 		prev=[]
 		change=[np.NaN]
 		for index, row in df_returns.iterrows():
