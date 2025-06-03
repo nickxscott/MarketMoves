@@ -72,8 +72,6 @@ def plot_return(df_returns, tail=None, return_=None):
     latest_date=df_returns.Date.max()
     latest_date_display=str(latest_date.day)+'/'+str(latest_date.month)+'/'+str(latest_date.year)
 
-    fig.write_html("fig.html")
-
     return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder), text, return_display, latest_date, custom_return
 
 def plot_price(df):
