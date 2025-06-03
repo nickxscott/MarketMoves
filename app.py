@@ -1,5 +1,5 @@
 #flask imports
-from flask import Flask,render_template,request,url_for,flash,jsonify,session,redirect, Markup, send_file
+from flask import Flask,render_template,request,url_for,flash,jsonify,redirect, Markup, send_file
 
 #scheduling imports
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -46,11 +46,15 @@ def home():
 		period=form.period.data
 	#get daily data for past 5 years and calculate change
 	start_date = yf.download(	symbol, 
-								period=period,
-								session=session).index.min()
+								period=period
+								#session=session
+								).index.min()
 
 	#get all max historical data for price plot
-	df_max=yf.download(symbol, period='max', session=session)
+	df_max=yf.download(symbol, 
+						period='max'
+						#session=session
+						)
 	df_max.columns=df_max.columns.droplevel('Ticker')
 	df_max=df_max.reset_index()
 	#filter max dataset to only dates within selected period
@@ -67,7 +71,9 @@ def home():
 		ticker=False
 	else:
 		#get ticker data
-		ticker=yf.Ticker(symbol,session=session).info
+		ticker=yf.Ticker(symbol
+						#session=session
+						).info
 		prev=[]
 		change=[np.NaN]
 		for index, row in df_returns.iterrows():
