@@ -45,7 +45,6 @@ def home():
 		symbol=symbol.replace(".", "-")
 		period=form.period.data
 	#get daily data for past 5 years and calculate change
-	print('symbol: ', symbol)
 	start_date = yf.download(	symbol, 
 								period=period,
 								session=session).index.min()
@@ -89,24 +88,24 @@ def home():
 		ma_100=[]
 		ma_200=[]
 		for index, row in df_max.iterrows():
-		    thirty=df_max.loc[index-29:index]
-		    fifty=df_max.loc[index-49:index]
-		    onehund=df_max.loc[index-99:index]
-		    twohund=df_max.loc[index-199:index]
+		    thirty=df_max.loc[index-29:index].Close
+		    fifty=df_max.loc[index-49:index].Close
+		    onehund=df_max.loc[index-99:index].Close
+		    twohund=df_max.loc[index-199:index].Close
 		    if len(thirty)==30:
-		        ma_30.append(thirty.Close.mean())
+		        ma_30.append(thirty.mean())
 		    else:
 		        ma_30.append(None)
 		    if len(fifty)==50:
-		        ma_50.append(fifty.Close.mean())
+		        ma_50.append(fifty.mean())
 		    else:
 		        ma_50.append(None)
 		    if len(onehund)==100:
-		        ma_100.append(onehund.Close.mean())
+		        ma_100.append(onehund.mean())
 		    else:
 		        ma_100.append(None)
 		    if len(twohund)==200:
-		        ma_200.append(twohund.Close.mean())
+		        ma_200.append(twohund.mean())
 		    else:
 		        ma_200.append(None)
 		df_max['ma_30']=ma_30
