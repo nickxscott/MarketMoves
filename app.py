@@ -46,13 +46,18 @@ def home():
 		period=form.period.data
 	#get daily data for past 5 years and calculate change
 	print('symbol: ', symbol)
-	df_returns = yf.download(	symbol, 
+	start_date = yf.download(	symbol, 
 								period=period,
-								session=session)
+								session=session).index.min()
+
+	#get all max historical data for price plot
+	df_max=yf.download(symbol, period='max', session=session)
+	df_max.columns=df_max.columns.droplevel('Ticker')
+	df_max=df_max.reset_index()
+	#filter max dataset to only dates within selected period
+	df_returns=df_max.loc[df_max.Date>=start_date]
 	
-	#remove top level index
-	df_returns.columns=df_returns.columns.droplevel('Ticker')
-	df_returns=df_returns.reset_index()
+	
 
 	if len(df_returns)<1:
 		err=True
@@ -76,13 +81,8 @@ def home():
 		#print(df_returns.iloc[-1].change)
 		plot, text, return_, latest_date, custom_return=plot_return(df_returns=df_returns, tail=form.tail.data, return_=form.return_.data)
 
-		#get all max historical data for price plot
-		if period!='max':
-			df_max = yf.download(symbol, period='max', session=session)
-			df_max.columns=df_max.columns.droplevel('Ticker')
-			df_max=df_max.reset_index()
-		else:
-			df_max=df_returns
+		
+
 		#calculate moving averages
 		ma_30=[]
 		ma_50=[]
