@@ -1,5 +1,4 @@
 apscheduler==3.10.4
-curl_cffi==0.10.0
 Flask==2.0.3
 Flask-WTF==1.2.0
 gunicorn==21.2.0

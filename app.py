@@ -9,7 +9,7 @@ from apscheduler.triggers.cron import CronTrigger
 from funs import *
 from forms import *
 from get import get_request
-from curl_cffi import requests
+#from curl_cffi import requests
 
 #python imports
 from datetime import date
@@ -33,7 +33,7 @@ def home():
 	err=False
 	custom_return=False
 	today=date.today()
-	session = requests.Session(impersonate="chrome")
+	#session = requests.Session(impersonate="chrome")
 	if request.method!='POST':
 		symbol='SPY'
 		form.ticker.data=symbol
@@ -45,14 +45,16 @@ def home():
 		symbol=symbol.replace(".", "-")
 		period=form.period.data
 	#get daily data for past 5 years and calculate change
-	start_date = yf.download(	symbol, 
-								period=period
+	start_date = yf.download(	symbol,
+								period=period,
+								auto_adjust=True
 								#session=session
 								).index.min()
 
 	#get all max historical data for price plot
 	df_max=yf.download(symbol, 
-						period='max'
+						period='max',
+						auto_adjust=True
 						#session=session
 						)
 	df_max.columns=df_max.columns.droplevel('Ticker')
