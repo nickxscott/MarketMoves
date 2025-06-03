@@ -33,7 +33,7 @@ def home():
 	err=False
 	custom_return=False
 	today=date.today()
-	session = requests.Session(impersonate="chrome")
+	session = requests.Session(impersonate="safari")
 	if request.method!='POST':
 		symbol='SPY'
 		form.ticker.data=symbol
@@ -55,8 +55,7 @@ def home():
 	df_max=df_max.reset_index()
 	#filter max dataset to only dates within selected period
 	df_returns=df_max.loc[df_max.Date>=start_date]
-	
-	
+
 
 	if len(df_returns)<1:
 		err=True
@@ -77,10 +76,7 @@ def home():
 				chg=(row['Close']-prev[-2])/prev[-2]
 				change.append(chg*100)
 		df_returns['change']=change
-		#print(df_returns.iloc[-1].change)
 		plot, text, return_, latest_date, custom_return=plot_return(df_returns=df_returns, tail=form.tail.data, return_=form.return_.data)
-
-		
 
 		#calculate moving averages
 		ma_30=[]
