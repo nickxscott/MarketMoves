@@ -13,22 +13,18 @@ import plotly
 import plotly.express as px
 import plotly.figure_factory as ff
 
-def plot_return(df, tail=None, return_=None):
+def plot_return(df_returns, tail=None, return_=None):
     #get daily data for past 5 years and calculate change
-    df_returns = df
     custom_return=False
-        
     #create plot
     fig = ff.create_distplot([df_returns.change.tolist()[1:]], group_labels=['returns'],show_hist=False,show_rug=False)
 
     #get latest return by default, else get return entered
     if return_ is None:
-        ret=df_returns.iloc[-1].change.values[0]
+        ret=df_returns.iloc[-1].change#.values[0]
     else:
         custom_return=True
         ret=float(return_)
-        #convert percent to decimal before plugging into formula
-        #ret=ret/100
     
     #calculate z score and cumulative distribution
     x=ret
@@ -65,36 +61,46 @@ def plot_return(df, tail=None, return_=None):
                        font = {'color': "#a8a8a8", 'family': "Monospace"},
                        hovermode=False,
                         dragmode=False,
-                        xaxis_title='Return (%)')
+                        xaxis_title='Return (%)',
+                        xaxis=dict(gridcolor='#4d4d4d'),
+                       yaxis=dict(gridcolor='#4d4d4d'))
     fig.update_yaxes(showticklabels=False)
 
     return_display=round(x,2)
 
     #get most recent date in df
-    latest_date=df_returns.index.max().date()
+    latest_date=df_returns.Date.max()
     latest_date_display=str(latest_date.day)+'/'+str(latest_date.month)+'/'+str(latest_date.year)
+
+    fig.write_html("fig.html")
 
     return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder), text, return_display, latest_date, custom_return
 
 def plot_price(df):
-    #remove multi index columns and rows
-    df.columns=df.columns.droplevel('Ticker')
-    df=df.reset_index()
-    #get daily data for past 5 years and calculate change
-    df.change=round(df.change,2)
-    fig = px.line(df, x="Date", y="Close", custom_data=['change'],hover_data={"Date":True, "Close":True, 'change':True})
-
+    #unpivot closing price and moving average columns
+    df_line=pd.melt(df, id_vars=['Date'], value_vars=['Close', 'ma_30', 'ma_50','ma_100', 'ma_200'])
+    m={'Close': 'Price', 'ma_30': '30-day Moving Avg','ma_50': '50-day Moving Avg','ma_100': '100-day Moving Avg','ma_200': '200-day Moving Avg'}
+    df_line.Price=df_line.Price.map(m)
+    category_orders={'Price': ['Price','30-day Moving Avg','50-day Moving Avg','100-day Moving Avg','200-day Moving Avg']}
+    color_discrete_map = {  'Price': '#0456d9', 
+                            '30-day Moving Avg': '#eeeeee', 
+                            '50-day Moving Avg': '#cccccc', 
+                            '100-day Moving Avg': '#bbbbbb', 
+                            '200-day Moving Avg': '#aaaaa0', }
+    fig = px.line(df_line, x="Date", y="value", color='Price',custom_data=['Price'],
+                    hover_data={"Date":True, "Price":True, 'value':True},
+                    color_discrete_map=color_discrete_map,category_orders=category_orders)
     #custom hover data
-    fig.update_traces(  hovertemplate='Date: %{x} <br>Closing Price: %{y:$.2f}<br>Change: %{customdata[0]}%<extra></extra>',
-                        hoverlabel = dict(
-                                            bgcolor='#ffffff'
-                                        ),
-                        marker_line=dict(width=2, color='#a8a8a8'),
-                        line=dict(color='#0456d9')
+    fig.update_traces(  hovertemplate='%{customdata[0]}: %{y:$.2f}<br><extra></extra>',
+                        hoverlabel = dict(bgcolor='#ffffff'),
+                        marker_line=dict(width=2)
                      )
     fig.update_layout(  {'plot_bgcolor':'rgba(0, 0, 0, 0)', 
                        'paper_bgcolor':'rgba(0, 0, 0, 0)'},
                        font = {'color': "#a8a8a8", 'family': "Monospace"},
-                       yaxis_title='Share Price ($)')
+                       yaxis_title='Share Price ($)',
+                       hovermode='x',
+                       xaxis=dict(gridcolor='#4d4d4d'),
+                       yaxis=dict(gridcolor='#4d4d4d'))
 
     return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)

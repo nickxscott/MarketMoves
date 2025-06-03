@@ -1,6 +1,5 @@
 #flask imports
 from flask import Flask,render_template,request,url_for,flash,jsonify,session,redirect, Markup, send_file
-from flask_session import Session
 
 #scheduling imports
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -39,17 +38,21 @@ def home():
 		symbol='SPY'
 		form.ticker.data=symbol
 		form.tail.data='auto'
+		period='3mo'
+		form.period.data=period
 	else:
 		symbol=form.ticker.data.replace(" ", "").upper()
 		symbol=symbol.replace(".", "-")
-
+		period=form.period.data
 	#get daily data for past 5 years and calculate change
 	print('symbol: ', symbol)
 	df_returns = yf.download(	symbol, 
-								#start=date.today()-timedelta(days=365*5), end=date.today(), 
-								period='5y',
+								period=period,
 								session=session)
 	
+	#remove top level index
+	df_returns.columns=df_returns.columns.droplevel('Ticker')
+	df_returns=df_returns.reset_index()
 
 	if len(df_returns)<1:
 		err=True
@@ -65,15 +68,54 @@ def home():
 		prev=[]
 		change=[np.NaN]
 		for index, row in df_returns.iterrows():
-			prev.append(row['Close'][symbol])
+			prev.append(row['Close'])
 			if len(prev)>1:
-				chg=(row['Close'][symbol]-prev[-2])/prev[-2]
+				chg=(row['Close']-prev[-2])/prev[-2]
 				change.append(chg*100)
 		df_returns['change']=change
-		
-		plot, text, return_, latest_date, custom_return=plot_return(df=df_returns, tail=form.tail.data, return_=form.return_.data)
+		#print(df_returns.iloc[-1].change)
+		plot, text, return_, latest_date, custom_return=plot_return(df_returns=df_returns, tail=form.tail.data, return_=form.return_.data)
 
-		price_plot=plot_price(df_returns)
+		#get all max historical data for price plot
+		if period!='max':
+			df_max = yf.download(symbol, period='max', session=session)
+			df_max.columns=df_max.columns.droplevel('Ticker')
+			df_max=df_max.reset_index()
+		else:
+			df_max=df_returns
+		#calculate moving averages
+		ma_30=[]
+		ma_50=[]
+		ma_100=[]
+		ma_200=[]
+		for index, row in df_max.iterrows():
+		    thirty=df_max.loc[index-29:index]
+		    fifty=df_max.loc[index-49:index]
+		    onehund=df_max.loc[index-99:index]
+		    twohund=df_max.loc[index-199:index]
+		    if len(thirty)==30:
+		        ma_30.append(thirty.Close.mean())
+		    else:
+		        ma_30.append(None)
+		    if len(fifty)==50:
+		        ma_50.append(fifty.Close.mean())
+		    else:
+		        ma_50.append(None)
+		    if len(onehund)==100:
+		        ma_100.append(onehund.Close.mean())
+		    else:
+		        ma_100.append(None)
+		    if len(twohund)==200:
+		        ma_200.append(twohund.Close.mean())
+		    else:
+		        ma_200.append(None)
+		df_max['ma_30']=ma_30
+		df_max['ma_50']=ma_50
+		df_max['ma_100']=ma_100
+		df_max['ma_200']=ma_200
+		df_max=df_max.loc[df_max.Date>=df_returns.Date.min()]
+
+		price_plot=plot_price(df_max)
 
 	return render_template("home.html", form=form, 
 										ticker=ticker, 
