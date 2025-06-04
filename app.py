@@ -57,6 +57,8 @@ def home():
 						auto_adjust=True
 						#session=session
 						)
+
+
 	df_max.columns=df_max.columns.droplevel('Ticker')
 	df_max=df_max.reset_index()
 	#filter max dataset to only dates within selected period
@@ -72,8 +74,11 @@ def home():
 		latest_date=False
 		ticker=False
 	else:
-		#get ticker data
-		ticker=yf.Ticker(symbol).info['longName']
+		#get ticker data - try info method first, just use symbol input if it fails
+		try:
+			ticker=yf.Ticker(symbol).info['longName']
+		except:
+			ticker=symbol
 		prev=[]
 		change=[np.NaN]
 		for index, row in df_returns.iterrows():
@@ -85,36 +90,6 @@ def home():
 		plot, text, return_, latest_date, custom_return=plot_return(df_returns=df_returns, tail=form.tail.data, return_=form.return_.data)
 
 		#calculate moving averages
-		#ma_30=[]
-		#ma_50=[]
-		#ma_100=[]
-		#ma_200=[]
-		#for index, row in df_max.iterrows():
-		#    thirty=df_max.loc[index-29:index].Close
-		#    fifty=df_max.loc[index-49:index].Close
-		#    onehund=df_max.loc[index-99:index].Close
-		#    twohund=df_max.loc[index-199:index].Close
-		#    if len(thirty)==30:
-		#        ma_30.append(thirty.mean())
-		#    else:
-		#        ma_30.append(None)
-		#    if len(fifty)==50:
-		#        ma_50.append(fifty.mean())
-		#    else:
-		#        ma_50.append(None)
-		#    if len(onehund)==100:
-		#        ma_100.append(onehund.mean())
-		#    else:
-		#        ma_100.append(None)
-		#    if len(twohund)==200:
-		#        ma_200.append(twohund.mean())
-		#    else:
-		#        ma_200.append(None)
-		#df_max['ma_30']=ma_30
-		#df_max['ma_50']=ma_50
-		#df_max['ma_100']=ma_100
-		#df_max['ma_200']=ma_200
-
 		df_max['ma_30']=df_max['Close'].rolling(30).mean()
 		df_max['ma_50']=df_max['Close'].rolling(50).mean()
 		df_max['ma_100']=df_max['Close'].rolling(100).mean()
