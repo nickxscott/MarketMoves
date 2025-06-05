@@ -48,50 +48,52 @@
                 </div>
             </div>
         </div>
-        <div class='col-12 col-md-10 col-lg-10 col-xl-8 text-center mb-2' >
-            <div class="card d-block border border-2 border-grey mt-2 container-fluid"  >
-                <div class="row m-auto">
-                    {% if not err %}
-                        <div class='card-header'>
-                            <h2>{{ticker}}</h2>
-                        </div>
-                        <div class='card-body'>
-                            {% if not custom_return %}
-                                <p class='lead' >Return ({{latest_date}}): <b>{{ return_ }}%</b></p>
-                            {% else %}
-                                <p class='lead' >Return: {{ return_ }}%</p>
-                            {% endif %}
-                            <p class='lead' >{{ text | safe }}</p>
-                            <h3 class='mb-0 pb-0 mt-5'><u>Return Distribution</u></h3>
-                            <div style="overflow-x: auto;">
-                                <div class='mt-0 pt-0' id='market-plot' style='min-width: 600px;'>
-                                    <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
-                                    <script type='text/javascript'>
-                                      var graph1 = {{ plot | safe }};
-                                      var config = {responsive: true};
-                                      Plotly.plot('market-plot',graph1,{displayModeBar: false});
-                                    </script>
+        {% if not get %}
+            <div class='col-12 col-md-10 col-lg-10 col-xl-8 text-center mb-2' >
+                <div class="card d-block border border-2 border-grey mt-2 container-fluid"  >
+                    <div class="row m-auto">
+                        {% if not err %}
+                            <div class='card-header'>
+                                <h2>{{ticker}}</h2>
+                            </div>
+                            <div class='card-body'>
+                                {% if not custom_return %}
+                                    <p class='lead' >Return ({{latest_date}}): <b>{{ return_ }}%</b></p>
+                                {% else %}
+                                    <p class='lead' >Return: {{ return_ }}%</p>
+                                {% endif %}
+                                <p class='lead' >{{ text | safe }}</p>
+                                <h3 class='mb-0 pb-0 mt-5'><u>Return Distribution</u></h3>
+                                <div style="overflow-x: auto;">
+                                    <div class='mt-0 pt-0' id='market-plot' style='min-width: 600px;'>
+                                        <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+                                        <script type='text/javascript'>
+                                          var graph1 = {{ plot | safe }};
+                                          var config = {responsive: true};
+                                          Plotly.plot('market-plot',graph1,{displayModeBar: false});
+                                        </script>
+                                    </div>
+                                </div>
+                                <h3 class='mb-0 pb-0 mt-5'><u>Price History</u></h3>
+                                <p class='small'>Click and drag to zoom. Double click to reset chart.</p>
+                                <div style="overflow-x: auto;">
+                                    <div class='mt-0 pt-0' id='price-plot'  style='min-width: 600px;'>
+                                        <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+                                        <script type='text/javascript'>
+                                          var graph2 = {{ price_plot | safe }};
+                                          var config = {responsive: true};
+                                          Plotly.plot('price-plot',graph2,{displayModeBar: false});
+                                        </script>
+                                    </div>
                                 </div>
                             </div>
-                            <h3 class='mb-0 pb-0 mt-5'><u>Price History</u></h3>
-                            <p class='small'>Click and drag to zoom. Double click to reset chart.</p>
-                            <div style="overflow-x: auto;">
-                                <div class='mt-0 pt-0' id='price-plot'  style='min-width: 600px;'>
-                                    <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
-                                    <script type='text/javascript'>
-                                      var graph2 = {{ price_plot | safe }};
-                                      var config = {responsive: true};
-                                      Plotly.plot('price-plot',graph2,{displayModeBar: false});
-                                    </script>
-                                </div>
-                            </div>
-                        </div>
-                    {% else %}
-                        <p class='lead'>Ticker not found</p>
-                    {% endif %}
+                        {% else %}
+                            <p class='lead'>Ticker not found</p>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
-        </div>
+        {% endif %}
     </div>
 </div>
 

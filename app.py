@@ -33,14 +33,19 @@ def home():
 	err=False
 	custom_return=False
 	today=date.today()
-	#session = requests.Session(impersonate="chrome")
+	get=True
+	
 	if request.method!='POST':
 		symbol='SPY'
 		form.ticker.data=symbol
 		form.tail.data='auto'
 		period='3mo'
 		form.period.data=period
+		return render_template("home.html", form=form, 
+											get=get
+											)
 	else:
+		get=False
 		symbol=form.ticker.data.replace(" ", "").upper()
 		symbol=symbol.replace(".", "-")
 		period=form.period.data
@@ -99,6 +104,7 @@ def home():
 		price_plot=plot_price(df_max)
 
 	return render_template("home.html", form=form, 
+										get=False,
 										ticker=ticker, 
 										err=err, 
 										plot=plot, 
